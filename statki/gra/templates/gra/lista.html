@@ -1,0 +1,12 @@
+{% extends "gra/base.html" %}
+
+{% block content %}
+    <h1>Lista gier:</h1>
+    {% for gra in lista_gier %}
+        <li>
+            <a href="/gry/{{ forloop.counter }}"></a>
+        </li>
+    {% empty %}
+        <p>Nie rozegrano żadnych gier!</p>
+    {% endfor %}
+{% endblock %}
