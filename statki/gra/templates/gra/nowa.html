@@ -1,0 +1,14 @@
+{% extends "gra/base.html" %}
+{% load static %}
+
+{% block content %}
+    <table>
+        {% for i in liczby %}
+            <tr>
+                {% for j in liczby %}
+                    <td>{{ i }}{{ j }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
