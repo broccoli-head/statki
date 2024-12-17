@@ -6,9 +6,9 @@
         <li>
             <a href="/gry/{{ forloop.counter }}"></a>
         </li>
-    {% empty %}
+        {% empty %}
         <p>Nie rozegrano żadnych gier!</p>
-    {% endfor %}
+        {% endfor %}
 
-    <button onclick="location.href='/gra/nowa'" type="button">→→ NOWA GRA ←←</button>
+        <button onclick="location.href='/gra/nowa'" type="button">→→ NOWA GRA ←←</button>
 {% endblock %}

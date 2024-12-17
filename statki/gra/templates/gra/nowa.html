@@ -6,9 +6,17 @@
         {% for i in liczby %}
             <tr>
                 {% for j in liczby %}
-                    <td>{{ i }}{{ j }}</td>
+                    <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
                 {% endfor %}
             </tr>
         {% endfor %}
     </table>
+    <button id="potwierdz_plansze">Dalej →→</button>
+
+    <form id="form" method="POST" action="{% url 'gra:nowa_gra' %}" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="wybrane_pola" id="wybrane_pola">
+    </form>
+
+    <script src="{% static 'gra/skrypt.js' %}"></script>
 {% endblock %}
