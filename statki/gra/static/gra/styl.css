@@ -12,6 +12,7 @@ body {
     background-color: white;
     border-radius: 15px;
     width: fit-content;
+    text-align: center;
 }
 
 button {
@@ -34,10 +35,10 @@ button:hover {
 table tr td {
     background-color: rgb(174, 215, 255);
     border: solid 2px black;
-    padding: 20px;
-    transition: 0.3s;
-    border-radius: 3px;
+    border-radius: 5px;
     padding: 10px;
+    text-align: center;
+    font-size: 1.2em;
     transition: 0.2s;
 }
 
@@ -49,4 +50,11 @@ td:hover {
 .zaznaczone {
     background-color: rgb(199, 0, 0);
     color: white;
+}
+
+.komunikat {
+    font-size: 1.3em;
+    color: red;
+    font-weight: bold;
+    text-align: center;
 }
