@@ -1,0 +1,40 @@
+{% extends "gra/base.html" %}
+{% load static %}
+
+{% block content %}
+<div id="plansze">
+    <div class="zawartosc">
+        {% if komunikat %}
+            <p class="komunikat">{{ komunikat }}</p>
+        {% endif %}
+        <p class="komunikat">Gracz 1</p>
+
+        <table>
+            {% for i in wielkosc_planszy %}
+                <tr>
+                    {% for j in wielkosc_planszy %}
+                        <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="zawartosc">
+        {% if komunikat %}
+            <p class="komunikat">{{ komunikat }}</p>
+        {% endif %}
+        <p class="komunikat">Gracz 2</p>
+
+        <table>
+            {% for i in wielkosc_planszy %}
+                <tr>
+                    {% for j in wielkosc_planszy %}
+                        <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -3,9 +3,10 @@ body {
     background-image: url("background.jpg");
     background-size: cover;
     background-attachment: fixed;
+    background-position-y: bottom;
 }
 
-#content {
+.zawartosc {
     margin-left: auto;
     margin-right: auto;
     padding: 15px;
@@ -19,7 +20,7 @@ button {
     margin-top: 15px;
     background-color: rgb(207, 207, 207);
     padding: 10px;
-    border: dashed 3px black;
+    border: dashed 4px black;
     border-radius: 10px;
     font-size: 1.3em;
     font-weight: bold;
@@ -32,7 +33,19 @@ button:hover {
     cursor: pointer;
 }
 
-table tr td {
+#przyciski {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+td {
     background-color: rgb(174, 215, 255);
     border: solid 2px black;
     border-radius: 5px;
@@ -47,14 +60,27 @@ td:hover {
     cursor: pointer;
 }
 
+#plansze {
+    display: flex;
+    justify-content: center;
+}
+
 .zaznaczone {
     background-color: rgb(199, 0, 0);
     color: white;
 }
 
 .komunikat {
-    font-size: 1.3em;
-    color: red;
+    font-size: 1.4em;
     font-weight: bold;
-    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.zielony {
+    color: green;
+}
+
+.czerwony {
+    color: red;
 }

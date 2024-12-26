@@ -1,14 +1,16 @@
 {% extends "gra/base.html" %}
 
 {% block content %}
-    <h1>Lista gier:</h1>
-    {% for gra in lista_gier %}
-        <li>
-            <a href="/gry/{{ forloop.counter }}"></a>
-        </li>
-        {% empty %}
-        <p>Nie rozegrano żadnych gier!</p>
+    <div class="zawartosc">
+        <h1>Lista gier:</h1>
+        {% for gra in lista_gier %}
+            <li>
+                <a href="/gry/{{ forloop.counter }}"></a>
+            </li>
+            {% empty %}
+            <p>Nie rozegrano żadnych gier!</p>
         {% endfor %}
 
         <button onclick="location.href='/gra/nowa'" type="button">→→ NOWA GRA ←←</button>
+    </div>
 {% endblock %}

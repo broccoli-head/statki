@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Uklad
+from .models import Gra, Uklad
 from .NowaGra import NowaGra
 import json
 
@@ -9,34 +9,76 @@ def lista(request):
 
 
 def nowa_gra(request):
+
     komunikat = None
-    gra = NowaGra();
+    blad = None
+    ostatnia_gra = Gra.objects.last()
+
+    if not ostatnia_gra or ostatnia_gra.ilosc_planszy == 2:
+        obecny_gracz = 1
+        gra = Gra.objects.create()
+
+    elif ostatnia_gra.ilosc_planszy == 1:
+        obecny_gracz = 2 
+        gra = ostatnia_gra
+
+    elif ostatnia_gra.ilosc_planszy == 0:
+        obecny_gracz = 1
+        gra = ostatnia_gra
     
+
     if request.method == 'POST':
 
-        wybrane_pola = request.POST.get('wybrane_pola')
-        wybrane_pola = json.loads(wybrane_pola)
+        odpowiedz = request.POST.get('wybrane_pola')
 
-        if not wybrane_pola:
-            komunikat = "Nie wybrano żadnych pól!"
+        if (odpowiedz == "RESET"):
+            gra.delete()
+            obecny_gracz = 1
+
         else:
-            try:
-                wynik = gra.sprawdzanie_statkow(wybrane_pola)
+            wybrane_pola = json.loads(odpowiedz)
+            if not wybrane_pola:
+                blad = "Nie wybrano żadnych pól!"
 
-                if wynik == True:
-                    print(f"Poprawne pola: {wybrane_pola}")
-                    Uklad.objects.create(pola = json.dumps(wybrane_pola))   #zapis do bazy danych
-                    komunikat = "Wysłano dane do bazy!"
+            else:
+                try:
+                    plansza = NowaGra() 
+                    wynik = plansza.sprawdzanie_statkow(wybrane_pola)
 
-                else:
-                    komunikat = wynik
+                    if wynik == True:
+                        Uklad.objects.create(gra=gra, pola=json.dumps(wybrane_pola))    #zapisywanie do bazy danych
+                        obecny_gracz += 1
+                        gra.ilosc_planszy += 1
+                        gra.save()
 
-            except ValueError as e:
-                komunikat = str(e)
+                        if (obecny_gracz > 2):
+                            komunikat = None
+                        else:
+                            komunikat = f"Plansza gracza {obecny_gracz - 1} została zapisana!"
+
+                    else:
+                        blad = wynik
+
+                except ValueError as e:
+                    blad = str(e)
     
-    context = {
-        'liczby': range(10),
-        'komunikat': komunikat
-    }
 
-    return render(request, "gra/nowa.html", context)
+    context = {
+        'wielkosc_planszy': range(10),
+        'gracz': obecny_gracz,
+        'komunikat': komunikat if not blad else blad,
+        'kolor': "zielony" if not blad else "czerwony"
+    }
+        
+    if obecny_gracz > 2:
+        return render(request, "gra/bitwa.html", context)
+    else:
+        return render(request, "gra/nowa.html", context)
+
+
+def bitwa(request):
+    context = {
+        'wielkosc_planszy': range(10)
+    }
+    
+    return render (request, "gra/bitwa.html", context) 

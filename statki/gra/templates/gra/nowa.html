@@ -2,25 +2,32 @@
 {% load static %}
 
 {% block content %}
-    {% if komunikat %}
-        <p class="komunikat">{{ komunikat }}</p>
-    {% endif %}
-    
-    <table>
-        {% for i in liczby %}
-            <tr>
-                {% for j in liczby %}
-                    <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
-    <button id="potwierdz_plansze">Dalej →→</button>
+    <div class="zawartosc">
+        {% if komunikat %}
+            <p class="komunikat {{ kolor }}">{{ komunikat }}</p>
+        {% endif %}
+            <p class="komunikat">Kolej gracza {{ gracz }}, wybierz pola:</p>
+        
+        <table>
+            {% for i in wielkosc_planszy %}
+                <tr>
+                    {% for j in wielkosc_planszy %}
+                        <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+        <div id="przyciski">
+            <button id="powrot">🔙 POWRÓT</a></button>
+            <button id="potwierdz_plansze">➡️ DALEJ</button>
+            <button id="reset">❌ RESET</button>
+        </div>
 
-    <form id="form" method="POST" action="{% url 'gra:nowa_gra' %}" style="display: none;">
-        {% csrf_token %}
-        <input type="hidden" name="wybrane_pola" id="wybrane_pola">
-    </form>
+        <form id="form" method="POST" action="{% url 'gra:nowa_gra' %}" style="display: none;">
+            {% csrf_token %}
+            <input type="hidden" name="wybrane_pola" id="wybrane_pola">
+        </form>
 
-    <script src="{% static 'gra/skrypt.js' %}"></script>
+        <script src="{% static 'gra/skrypt.js' %}"></script>
+    </div>
 {% endblock %}
