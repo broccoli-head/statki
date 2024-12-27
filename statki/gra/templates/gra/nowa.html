@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<main>
     <div class="zawartosc">
         {% if komunikat %}
             <p class="komunikat {{ kolor }}">{{ komunikat }}</p>
@@ -30,4 +31,7 @@
 
         <script src="{% static 'gra/skrypt.js' %}"></script>
     </div>
+
+    <image id="reguly" draggable="false" src="../../static/gra/tabela.png"></image>
+</main>
 {% endblock %}

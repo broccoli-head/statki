@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div id="plansze">
+<main>
     <div class="zawartosc">
         {% if komunikat %}
             <p class="komunikat">{{ komunikat }}</p>
@@ -36,5 +36,5 @@
             {% endfor %}
         </table>
     </div>
-</div>
+</main>
 {% endblock %}

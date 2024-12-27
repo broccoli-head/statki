@@ -44,7 +44,7 @@ class NowaGra:
 
         def sprawdz(x, y, obecny_statek):
 
-            if x < 0 or x >= 10 or y < 0 or y >= 10 or sprawdzone_pola[x][y] or tablica[x][y] == 0:
+            if x < 0 or x >= 10 or y < 0 or y >= 10 or sprawdzone_pola[x][y] or tablica[x][y] == False:
                 return
             
             sprawdzone_pola[x][y] = True
@@ -72,7 +72,7 @@ class NowaGra:
         
         for statek in statki:
             if not self.czy_liniowy(statek):
-                raise ValueError("Statki muszą być ułożone poziomo lub pionowo!")   #rzuca wyjątek jako komunikat
+                raise ValueError("Statki nie mogą się dotykać (nawet rogami)")   #rzuca wyjątek jako komunikat
         
         return statki
 

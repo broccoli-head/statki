@@ -1,15 +1,18 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Gra, Uklad
 from .NowaGra import NowaGra
 import json
 
 
 def lista(request):
-    return render(request, "gra/lista.html")
+    gry = Gra.objects.all().order_by('-id')[:10]    #10 ostatnich gier
+    context = {
+        'gry': gry
+    }
+    return render(request, "gra/lista.html", context)
 
 
 def nowa_gra(request):
-
     komunikat = None
     blad = None
     ostatnia_gra = Gra.objects.last()
@@ -22,7 +25,7 @@ def nowa_gra(request):
         obecny_gracz = 2 
         gra = ostatnia_gra
 
-    elif ostatnia_gra.ilosc_planszy == 0:
+    else:
         obecny_gracz = 1
         gra = ostatnia_gra
     
@@ -71,14 +74,18 @@ def nowa_gra(request):
     }
         
     if obecny_gracz > 2:
-        return render(request, "gra/bitwa.html", context)
+        return redirect('gra:bitwa', gra_id = gra.id)
     else:
         return render(request, "gra/nowa.html", context)
 
 
-def bitwa(request):
+def bitwa(request, gra_id):
+    gra = Gra.objects.get(id = gra_id)
+    uklady = Uklad.objects.filter(gra = gra).order_by('-id')[:2]
+
     context = {
-        'wielkosc_planszy': range(10)
+        'wielkosc_planszy': range(10),
+        'gra': gra,
+        'uklady': uklady
     }
-    
     return render (request, "gra/bitwa.html", context) 

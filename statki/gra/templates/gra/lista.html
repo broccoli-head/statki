@@ -1,16 +1,22 @@
 {% extends "gra/base.html" %}
+{% load tz %}
 
 {% block content %}
+<main>
     <div class="zawartosc">
         <h1>Lista gier:</h1>
-        {% for gra in lista_gier %}
+        <ul>
+        {% for gra in gry %}
             <li>
-                <a href="/gry/{{ forloop.counter }}"></a>
-            </li>
+                <a href="/gra/bitwa/{{ gra.id }}">Gra {{ gra.id }}</a>
+                {{ gra.data_rozpoczecia|localtime|date:"d.m.Y, H:i" }}
+            </li> 
             {% empty %}
             <p>Nie rozegrano żadnych gier!</p>
         {% endfor %}
+        </ul>
 
         <button onclick="location.href='/gra/nowa'" type="button">→→ NOWA GRA ←←</button>
     </div>
+</main>
 {% endblock %}

@@ -7,13 +7,24 @@ body {
 }
 
 .zawartosc {
-    margin-left: auto;
-    margin-right: auto;
     padding: 15px;
     background-color: white;
     border-radius: 15px;
-    width: fit-content;
     text-align: center;
+    width: fit-content;
+}
+
+main {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5%;
+}
+
+#reguly {
+    width: 350px;
+    user-select: none;
 }
 
 button {
@@ -25,11 +36,12 @@ button {
     font-size: 1.3em;
     font-weight: bold;
     font-family: "Comic Sans MS";
+    user-select: none;
     transition: 0.2s;
 }
 
 button:hover {
-    background-color: rgb(151, 151, 151);
+    background-color: rgb(159, 159, 159);
     cursor: pointer;
 }
 
@@ -43,6 +55,7 @@ button:hover {
 table {
     margin-left: auto;
     margin-right: auto;
+    user-select: none;
 }
 
 td {
@@ -60,14 +73,13 @@ td:hover {
     cursor: pointer;
 }
 
-#plansze {
-    display: flex;
-    justify-content: center;
+.zaznaczone {
+    background-color: rgb(3, 162, 0);
+    color: white;
 }
 
-.zaznaczone {
-    background-color: rgb(199, 0, 0);
-    color: white;
+.zaznaczone:hover {
+    background-color: rgb(2, 115, 0);
 }
 
 .komunikat {
