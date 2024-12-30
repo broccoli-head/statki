@@ -7,7 +7,7 @@
         {% if komunikat %}
             <p class="komunikat {{ kolor }}">{{ komunikat }}</p>
         {% endif %}
-            <p class="komunikat">Kolej gracza {{ gracz }}, wybierz pola:</p>
+        <p class="komunikat">Kolej gracza {{ gracz }}, wybierz pola:</p>
         
         <table>
             {% for i in wielkosc_planszy %}
@@ -24,12 +24,12 @@
             <button id="reset">❌ RESET</button>
         </div>
 
-        <form id="form" method="POST" action="{% url 'gra:nowa_gra' %}" style="display: none;">
+        <form id="form" method="POST" action="{% url 'gra:nowa_gra' %}">
             {% csrf_token %}
             <input type="hidden" name="wybrane_pola" id="wybrane_pola">
         </form>
 
-        <script src="{% static 'gra/skrypt.js' %}"></script>
+        <script src="{% static 'gra/nowa_skrypt.js' %}"></script>
     </div>
 
     <image id="reguly" draggable="false" src="../../static/gra/tabela.png"></image>

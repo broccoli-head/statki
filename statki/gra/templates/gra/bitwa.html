@@ -3,12 +3,17 @@
 
 {% block content %}
 <main>
-    <div class="zawartosc">
+    {% if kolej == 1 %}
+        <div id="kolej" class="zawartosc">
+    {% else %}
+        <div class="zawartosc">
+    {% endif %}
+
         {% if komunikat %}
             <p class="komunikat">{{ komunikat }}</p>
         {% endif %}
+        
         <p class="komunikat">Gracz 1</p>
-
         <table>
             {% for i in wielkosc_planszy %}
                 <tr>
@@ -18,14 +23,25 @@
                 </tr>
             {% endfor %}
         </table>
+        {% if kolej == 1 %}
+            <button id="strzel">💥 WYSTRZEL 💥</button>
+        {% else %}
+            <button disabled="true" class="zablokowane">POCZEKAJ NA SWOJĄ KOLEJ</button>
+        {% endif %}
     </div>
 
-    <div class="zawartosc">
+
+    {% if kolej == 2 %}
+        <div id="kolej" class="zawartosc">
+    {% else %}
+        <div class="zawartosc">
+    {% endif %}
+
         {% if komunikat %}
             <p class="komunikat">{{ komunikat }}</p>
         {% endif %}
+        
         <p class="komunikat">Gracz 2</p>
-
         <table>
             {% for i in wielkosc_planszy %}
                 <tr>
@@ -35,6 +51,18 @@
                 </tr>
             {% endfor %}
         </table>
+        {% if kolej == 2 %}
+            <button id="strzel">💥 WYSTRZEL 💥</button>
+        {% else %}
+            <button disabled="true" class="zablokowane">POCZEKAJ NA SWOJĄ KOLEJ</button>
+        {% endif %}
     </div>
+
+    <form id="form" method="POST" action="gra/bitwa/{{ id }}">
+        {% csrf_token %}
+        <input type="hidden" name="wybrane_pole" id="wybrane_pole">
+    </form>
+
+    <script src="{% static 'gra/bitwa_skrypt.js' %}"></script>
 </main>
 {% endblock %}

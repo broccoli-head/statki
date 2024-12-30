@@ -52,10 +52,36 @@ button:hover {
     gap: 20px;
 }
 
+#form {
+    display: none;
+}
+
 table {
     margin-left: auto;
     margin-right: auto;
     user-select: none;
+}
+
+ul {
+    padding: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+li {
+    font-size: 1.2em;
+    list-style-type: none;
+    padding-bottom: 5px;
+}
+
+li a {
+    padding-right: 40px;
+}
+
+#lista {
+    font-size: 1.2em;
+    padding: 40px;
+    padding-top: 20px;
 }
 
 td {
@@ -95,4 +121,15 @@ td:hover {
 
 .czerwony {
     color: red;
+}
+
+#strzel:hover {
+    background-color: rgb(226, 115, 56);
+    color: rgb(92, 4, 4);
+    border: dashed 4px rgb(92, 4, 4);
+}
+
+.zablokowane:hover {
+    cursor: not-allowed;
+    background-color: rgb(183, 120, 120);
 }

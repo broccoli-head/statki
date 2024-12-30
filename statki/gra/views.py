@@ -19,7 +19,7 @@ def nowa_gra(request):
 
     if not ostatnia_gra or ostatnia_gra.ilosc_planszy == 2:
         obecny_gracz = 1
-        gra = Gra.objects.create()
+
 
     elif ostatnia_gra.ilosc_planszy == 1:
         obecny_gracz = 2 
@@ -35,7 +35,8 @@ def nowa_gra(request):
         odpowiedz = request.POST.get('wybrane_pola')
 
         if (odpowiedz == "RESET"):
-            gra.delete()
+            if gra:
+                gra.delete()
             obecny_gracz = 1
 
         else:
@@ -49,6 +50,7 @@ def nowa_gra(request):
                     wynik = plansza.sprawdzanie_statkow(wybrane_pola)
 
                     if wynik == True:
+                        gra = Gra.objects.create()
                         Uklad.objects.create(gra=gra, pola=json.dumps(wybrane_pola))    #zapisywanie do bazy danych
                         obecny_gracz += 1
                         gra.ilosc_planszy += 1
@@ -74,18 +76,31 @@ def nowa_gra(request):
     }
         
     if obecny_gracz > 2:
+        gra.kolej_gracza += 1
+        gra.save()
         return redirect('gra:bitwa', gra_id = gra.id)
     else:
         return render(request, "gra/nowa.html", context)
 
 
 def bitwa(request, gra_id):
+    komunikat = None
     gra = Gra.objects.get(id = gra_id)
+    kolej = gra.kolej_gracza
     uklady = Uklad.objects.filter(gra = gra).order_by('-id')[:2]
-
+    
     context = {
         'wielkosc_planszy': range(10),
+        'komunikat': komunikat,
+        'kolej': kolej,
         'gra': gra,
         'uklady': uklady
     }
-    return render (request, "gra/bitwa.html", context) 
+
+    if kolej == 0:
+        return redirect("/gra/nowa/")
+    elif kolej == 1:
+        komunikat = "Graczu 1, wybierz pole i strzelaj!"
+        return render (request, "gra/bitwa.html", context) 
+    else:
+        return render (request, "gra/bitwa.html", context) 
