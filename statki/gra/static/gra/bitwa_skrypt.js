@@ -7,17 +7,20 @@ document.querySelectorAll('.pole').forEach(pole => {
 
         if (wybranePole == poleID) {
             wybranePole = "";
-            pole.classList.remove('zaznaczone');
+            pole.classList.remove('polePomaranczowe');
         } else {
-            document.getElementById(wybranePole).classList.remove('zaznaczone');
+            const usunietePole = document.getElementById(wybranePole);
+            if (usunietePole) {
+                usunietePole.classList.remove('polePomaranczowe');
+            }
             wybranePole = pole.id;
-            pole.classList.add('zaznaczone');
+            pole.classList.add('polePomaranczowe');
         }
     });
 });
 
 
-// document.getElementById('strzel').addEventListener('click', () => {
-//     document.getElementById('wybrane_pole').value = wybranePole;
-//     document.getElementById('form').submit();
-// });
+document.getElementById('strzel').addEventListener('click', () => {
+     document.getElementById('wybrane_pole').value = wybranePole;
+     document.getElementById('form').submit();
+});

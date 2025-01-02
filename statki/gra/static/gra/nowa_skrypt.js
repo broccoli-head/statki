@@ -7,10 +7,10 @@ document.querySelectorAll('.pole').forEach(pole => {
 
         if (wybranePola.has(poleID)) {
             wybranePola.delete(poleID);
-            pole.classList.remove('zaznaczone');
+            pole.classList.remove('poleZielone');
         } else {
             wybranePola.add(poleID);
-            pole.classList.add('zaznaczone');
+            pole.classList.add('poleZielone');
         }
     });
 });

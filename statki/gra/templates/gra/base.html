@@ -5,12 +5,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statki</title>
     <link rel="stylesheet" href="{% static 'gra/styl.css' %}">
+    <title>{% block tytul %}Statki{% endblock %}</title>
 </head>
 
 <body>
-    {% block content %}
+    {% block tresc %}
         <p>Tu powinna być treść strony</p>
     {% endblock %}
 </body>

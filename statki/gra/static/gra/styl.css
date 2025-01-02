@@ -85,27 +85,46 @@ li a {
 }
 
 td {
-    background-color: rgb(174, 215, 255);
+    background-color: rgb(194, 209, 227);
     border: solid 2px black;
     border-radius: 5px;
     padding: 10px;
     text-align: center;
     font-size: 1.2em;
-    transition: 0.2s;
+    transition: 0.3s;
 }
 
 td:hover {
-    background-color: rgb(103, 140, 176);
+    background-color: rgb(182, 108, 108);
+    cursor: not-allowed;
+}
+
+.pole {
+    background-color: rgb(126, 180, 234);
+}
+
+.pole:hover{
+    background-color: rgb(70, 121, 172);
     cursor: pointer;
 }
 
-.zaznaczone {
+.poleZielone {
     background-color: rgb(3, 162, 0);
     color: white;
 }
 
-.zaznaczone:hover {
+.poleZielone:hover {
     background-color: rgb(2, 115, 0);
+}
+
+.polePomaranczowe {
+    color: white;
+    background-color: rgb(213, 90, 14);
+}
+
+.polePomaranczowe:hover {
+    color: white;
+    background-color: rgb(186, 68, 25);
 }
 
 .komunikat {
@@ -115,11 +134,11 @@ td:hover {
     margin-right: auto;
 }
 
-.zielony {
+.zielonaCzcionka {
     color: green;
 }
 
-.czerwony {
+.czerwonaCzcionka {
     color: red;
 }
 

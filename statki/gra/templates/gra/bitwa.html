@@ -1,7 +1,9 @@
 {% extends "gra/base.html" %}
 {% load static %}
 
-{% block content %}
+{% block tytul %}Statki | Gra nr. {{ gra.id }}{% endblock %}
+
+{% block tresc %}
 <main>
     {% if kolej == 1 %}
         <div id="kolej" class="zawartosc">
@@ -17,9 +19,15 @@
         <table>
             {% for i in wielkosc_planszy %}
                 <tr>
-                    {% for j in wielkosc_planszy %}
-                        <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
-                    {% endfor %}
+                    {% if kolej == 1 %}
+                        {% for j in wielkosc_planszy %}
+                            <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
+                        {% endfor %}
+                    {% else %}
+                        {% for j in wielkosc_planszy %}
+                            <td id="{{ i }}x{{ j }}">{{ i }}{{ j }}</td>
+                        {% endfor %}
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>
@@ -45,9 +53,15 @@
         <table>
             {% for i in wielkosc_planszy %}
                 <tr>
-                    {% for j in wielkosc_planszy %}
-                        <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
-                    {% endfor %}
+                    {% if kolej == 2 %}
+                        {% for j in wielkosc_planszy %}
+                            <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
+                        {% endfor %}
+                    {% else %}
+                        {% for j in wielkosc_planszy %}
+                            <td id="{{ i }}x{{ j }}">{{ i }}{{ j }}</td>
+                        {% endfor %}
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>
@@ -58,7 +72,7 @@
         {% endif %}
     </div>
 
-    <form id="form" method="POST" action="gra/bitwa/{{ id }}">
+    <form id="form" method="POST" action="">
         {% csrf_token %}
         <input type="hidden" name="wybrane_pole" id="wybrane_pole">
     </form>

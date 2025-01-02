@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Gra, Uklad
 from .NowaGra import NowaGra
-import json
+import json, re
 
 
 def lista(request):
@@ -15,11 +15,11 @@ def lista(request):
 def nowa_gra(request):
     komunikat = None
     blad = None
+    gra = None
     ostatnia_gra = Gra.objects.last()
 
     if not ostatnia_gra or ostatnia_gra.ilosc_planszy == 2:
         obecny_gracz = 1
-
 
     elif ostatnia_gra.ilosc_planszy == 1:
         obecny_gracz = 2 
@@ -50,7 +50,9 @@ def nowa_gra(request):
                     wynik = plansza.sprawdzanie_statkow(wybrane_pola)
 
                     if wynik == True:
-                        gra = Gra.objects.create()
+                        if obecny_gracz == 1:
+                            gra = Gra.objects.create()
+
                         Uklad.objects.create(gra=gra, pola=json.dumps(wybrane_pola))    #zapisywanie do bazy danych
                         obecny_gracz += 1
                         gra.ilosc_planszy += 1
@@ -72,7 +74,7 @@ def nowa_gra(request):
         'wielkosc_planszy': range(10),
         'gracz': obecny_gracz,
         'komunikat': komunikat if not blad else blad,
-        'kolor': "zielony" if not blad else "czerwony"
+        'kolor': "zielonaCzcionka" if not blad else "czerwonaCzcionka"
     }
         
     if obecny_gracz > 2:
@@ -85,22 +87,57 @@ def nowa_gra(request):
 
 def bitwa(request, gra_id):
     komunikat = None
+    blad = None
     gra = Gra.objects.get(id = gra_id)
-    kolej = gra.kolej_gracza
-    uklady = Uklad.objects.filter(gra = gra).order_by('-id')[:2]
-    
+    uklady = Uklad.objects.filter(gra = gra).order_by('id')[:2]
+
     context = {
         'wielkosc_planszy': range(10),
-        'komunikat': komunikat,
-        'kolej': kolej,
+        'kolej': gra.kolej_gracza,
         'gra': gra,
-        'uklady': uklady
+        'komunikat': komunikat if not blad else blad  
     }
 
-    if kolej == 0:
+    if gra.kolej_gracza == 0:
         return redirect("/gra/nowa/")
-    elif kolej == 1:
-        komunikat = "Graczu 1, wybierz pole i strzelaj!"
-        return render (request, "gra/bitwa.html", context) 
+
+    if request.method == 'POST':
+        odpowiedz = request.POST.get('wybrane_pole')
+        
+        pole = re.search(r"(\d)x(\d)", odpowiedz)    #regex (0-9 x 0-9)
+        if not pole:
+            blad = "Niepoprawny format danych!"
+        else:
+            x, y = map(int, pole.groups())
+            if not (0 <= x < 10 and 0 <= y < 10):
+                blad = "Pole poza zakresem planszy!"
+            else:
+                pole = pole.group(0)
+
+                if gra.kolej_gracza == 1:
+                    gra.kolej_gracza = 2
+                    gra.save()
+
+                    if pole in uklady[1].pola:
+                        komunikat = "Trafiony! Kolej gracza " + str(gra.kolej_gracza)
+                    else:
+                        komunikat = "Nie trafiłeś! Kolej gracza " + str(gra.kolej_gracza)
+                    
+                    print(pole + " " + komunikat)
+                    return redirect('gra:bitwa', gra_id = gra.id)
+                    
+
+                if gra.kolej_gracza == 2:
+                    gra.kolej_gracza = 1
+                    gra.save()
+
+                    if pole in uklady[0].pola:
+                        komunikat = "Trafiony! Kolej gracza " + str(gra.kolej_gracza)
+                    else:
+                        komunikat = "Nie trafiłeś! Kolej gracza " + str(gra.kolej_gracza)
+                    
+                    print(pole + " " + komunikat)
+                    return redirect('gra:bitwa', gra_id = gra.id)
+        
     else:
-        return render (request, "gra/bitwa.html", context) 
+        return render (request, "gra/bitwa.html", context)   
