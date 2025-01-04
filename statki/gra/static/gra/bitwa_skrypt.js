@@ -1,11 +1,10 @@
 let wybranePole = "";
 
 document.querySelectorAll('.pole').forEach(pole => {
-
     pole.addEventListener('click', () => {
         const poleID = pole.id;
 
-        if (wybranePole == poleID) {
+        if (wybranePole === poleID) {
             wybranePole = "";
             pole.classList.remove('polePomaranczowe');
         } else {
@@ -13,14 +12,17 @@ document.querySelectorAll('.pole').forEach(pole => {
             if (usunietePole) {
                 usunietePole.classList.remove('polePomaranczowe');
             }
-            wybranePole = pole.id;
+            wybranePole = poleID;
             pole.classList.add('polePomaranczowe');
         }
     });
 });
 
-
 document.getElementById('strzel').addEventListener('click', () => {
-     document.getElementById('wybrane_pole').value = wybranePole;
-     document.getElementById('form').submit();
+    if (wybranePole === "") {
+        alert("Nie wybrano żadnych pól!");
+        return;
+    }
+    document.getElementById('wybrane_pole').value = wybranePole;
+    document.getElementById('form').submit();
 });

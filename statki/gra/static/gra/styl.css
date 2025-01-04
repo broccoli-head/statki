@@ -152,3 +152,7 @@ td:hover {
     cursor: not-allowed;
     background-color: rgb(183, 120, 120);
 }
+
+#informacja {
+    margin: 0 auto; /* Wyrównanie poziome */
+}

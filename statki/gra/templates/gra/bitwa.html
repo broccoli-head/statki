@@ -1,22 +1,26 @@
 {% extends "gra/base.html" %}
 {% load static %}
 
-{% block tytul %}Statki | Gra nr. {{ gra.id }}{% endblock %}
+{% block tytul %}Statki | Gra nr. {{ graID }}{% endblock %}
 
 {% block tresc %}
+
+{% if komunikat %}
+    <div id="informacja" class="zawartosc">
+        <span class="komunikat {{ kolor }}">{{ komunikat }}</span>
+        <span class="komunikat">Kolej gracza {{ kolej }}</span>
+    </div>
+{% endif %}
+
 <main>
     {% if kolej == 1 %}
         <div id="kolej" class="zawartosc">
     {% else %}
         <div class="zawartosc">
     {% endif %}
-
-        {% if komunikat %}
-            <p class="komunikat">{{ komunikat }}</p>
-        {% endif %}
         
         <p class="komunikat">Gracz 1</p>
-        <table>
+        <table trafione_pola="{{ trafione1 }}">
             {% for i in wielkosc_planszy %}
                 <tr>
                     {% if kolej == 1 %}
@@ -25,7 +29,7 @@
                         {% endfor %}
                     {% else %}
                         {% for j in wielkosc_planszy %}
-                            <td id="{{ i }}x{{ j }}">{{ i }}{{ j }}</td>
+                            <td>{{ i }}{{ j }}</td>
                         {% endfor %}
                     {% endif %}
                 </tr>
@@ -44,13 +48,9 @@
     {% else %}
         <div class="zawartosc">
     {% endif %}
-
-        {% if komunikat %}
-            <p class="komunikat">{{ komunikat }}</p>
-        {% endif %}
         
         <p class="komunikat">Gracz 2</p>
-        <table>
+        <table trafione_pola="{{ trafione2 }}">
             {% for i in wielkosc_planszy %}
                 <tr>
                     {% if kolej == 2 %}
@@ -59,7 +59,7 @@
                         {% endfor %}
                     {% else %}
                         {% for j in wielkosc_planszy %}
-                            <td id="{{ i }}x{{ j }}">{{ i }}{{ j }}</td>
+                            <td>{{ i }}{{ j }}</td>
                         {% endfor %}
                     {% endif %}
                 </tr>

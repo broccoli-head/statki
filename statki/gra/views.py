@@ -85,17 +85,19 @@ def nowa_gra(request):
         return render(request, "gra/nowa.html", context)
 
 
+
 def bitwa(request, gra_id):
-    komunikat = None
-    blad = None
     gra = Gra.objects.get(id = gra_id)
     uklady = Uklad.objects.filter(gra = gra).order_by('id')[:2]
-
+    
     context = {
         'wielkosc_planszy': range(10),
         'kolej': gra.kolej_gracza,
-        'gra': gra,
-        'komunikat': komunikat if not blad else blad  
+        'graID': gra.id,
+        'komunikat': gra.komunikat,
+        'kolor': "zielonaCzcionka" if gra.komunikat == "Trafiony!" else "czerwonaCzcionka",
+        'trafione1': uklady[0].trafione_pola,
+        'trafione2': uklady[1].trafione_pola
     }
 
     if gra.kolej_gracza == 0:
@@ -103,41 +105,25 @@ def bitwa(request, gra_id):
 
     if request.method == 'POST':
         odpowiedz = request.POST.get('wybrane_pole')
-        
         pole = re.search(r"(\d)x(\d)", odpowiedz)    #regex (0-9 x 0-9)
-        if not pole:
-            blad = "Niepoprawny format danych!"
+
+        if odpowiedz == "":
+            gra.komunikat = "Nie wybrano żadnego pola!"
+        elif not pole:
+            gra.komunikat = "Niepoprawny format danych!"
         else:
             x, y = map(int, pole.groups())
             if not (0 <= x < 10 and 0 <= y < 10):
-                blad = "Pole poza zakresem planszy!"
+                gra.komunikat = "Pole poza zakresem planszy!"
             else:
                 pole = pole.group(0)
 
-                if gra.kolej_gracza == 1:
-                    gra.kolej_gracza = 2
-                    gra.save()
-
-                    if pole in uklady[1].pola:
-                        komunikat = "Trafiony! Kolej gracza " + str(gra.kolej_gracza)
-                    else:
-                        komunikat = "Nie trafiłeś! Kolej gracza " + str(gra.kolej_gracza)
-                    
-                    print(pole + " " + komunikat)
-                    return redirect('gra:bitwa', gra_id = gra.id)
-                    
-
-                if gra.kolej_gracza == 2:
-                    gra.kolej_gracza = 1
-                    gra.save()
-
-                    if pole in uklady[0].pola:
-                        komunikat = "Trafiony! Kolej gracza " + str(gra.kolej_gracza)
-                    else:
-                        komunikat = "Nie trafiłeś! Kolej gracza " + str(gra.kolej_gracza)
-                    
-                    print(pole + " " + komunikat)
-                    return redirect('gra:bitwa', gra_id = gra.id)
+                atakowany_uklad = uklady[1] if gra.kolej_gracza == 1 else uklady[0]
+                gra.kolej_gracza = 2 if gra.kolej_gracza == 1 else 1
+                gra.komunikat = "Trafiony!" if pole in atakowany_uklad.pola else "Nie trafiłeś!"
+                
+        gra.save()
+        return redirect('gra:bitwa', gra_id=gra.id)
         
     else:
         return render (request, "gra/bitwa.html", context)   
