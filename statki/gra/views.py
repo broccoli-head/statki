@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Gra, Uklad
 from .NowaGra import NowaGra
-import json, re
+import json, re, ast
 
 
 def lista(request):
@@ -88,16 +88,22 @@ def nowa_gra(request):
 
 def bitwa(request, gra_id):
     gra = Gra.objects.get(id = gra_id)
-    uklady = Uklad.objects.filter(gra = gra).order_by('id')[:2]
-    
+    uklady = list(Uklad.objects.filter(gra=gra).order_by('id')[:2])
+    trafione1 = uklady[0].trafione
+    nietrafione1 = uklady[0].nietrafione
+    trafione2 = uklady[1].trafione
+    nietrafione2 = uklady[1].nietrafione
+
     context = {
         'wielkosc_planszy': range(10),
         'kolej': gra.kolej_gracza,
         'graID': gra.id,
         'komunikat': gra.komunikat,
         'kolor': "zielonaCzcionka" if gra.komunikat == "Trafiony!" else "czerwonaCzcionka",
-        'trafione1': uklady[0].trafione_pola,
-        'trafione2': uklady[1].trafione_pola
+        'trafione1': trafione1,
+        'trafione2': trafione2,
+        'nietrafione1': nietrafione1,
+        'nietrafione2': nietrafione2
     }
 
     if gra.kolej_gracza == 0:
@@ -117,11 +123,34 @@ def bitwa(request, gra_id):
                 gra.komunikat = "Pole poza zakresem planszy!"
             else:
                 pole = pole.group(0)
+                if gra.kolej_gracza == 1:
+                    atakowany_uklad = uklady[1]
+                    uklad = uklady[0]
+                    #jezeli nie ma pól, tworzy nową listę, a jeśli są to castuje stringa z polami do listy
+                    listaTrafionych = [] if not trafione1 else ast.literal_eval(trafione1)
+                    listaNietrafionych = [] if not nietrafione1 else ast.literal_eval(nietrafione1)
+                else:
+                    atakowany_uklad = uklady[0]
+                    uklad = uklady[1]
+                    listaTrafionych = [] if not trafione2 else ast.literal_eval(trafione2) 
+                    listaNietrafionych = [] if not nietrafione2 else ast.literal_eval(nietrafione2)         
 
-                atakowany_uklad = uklady[1] if gra.kolej_gracza == 1 else uklady[0]
-                gra.kolej_gracza = 2 if gra.kolej_gracza == 1 else 1
-                gra.komunikat = "Trafiony!" if pole in atakowany_uklad.pola else "Nie trafiłeś!"
-                
+                if pole in listaTrafionych or pole in listaNietrafionych:
+                    gra.komunikat = "Wybrano już to pole! Wybierz inne."
+                else:
+                    if pole in atakowany_uklad.pola:
+                        gra.komunikat = "Trafiony!"
+                        listaTrafionych.append(pole)
+                        uklad.trafione = json.dumps(listaTrafionych)
+                    else:
+                        gra.komunikat = "Nie trafiłeś!"
+                        listaNietrafionych.append(pole)
+                        uklad.nietrafione = json.dumps(listaNietrafionych)
+                    
+                    uklad.save()
+                    gra.kolej_gracza = 1 if gra.kolej_gracza == 2 else 2
+                    
+           
         gra.save()
         return redirect('gra:bitwa', gra_id=gra.id)
         

@@ -9,6 +9,7 @@
     <div id="informacja" class="zawartosc">
         <span class="komunikat {{ kolor }}">{{ komunikat }}</span>
         <span class="komunikat">Kolej gracza {{ kolej }}</span>
+        <p id="infoKolor">🟥― nietrafione &nbsp;&nbsp;&nbsp; 🟩― trafione</p>
     </div>
 {% endif %}
 
@@ -20,7 +21,7 @@
     {% endif %}
         
         <p class="komunikat">Gracz 1</p>
-        <table trafione_pola="{{ trafione1 }}">
+        <table class="plansze" trafione="{{ trafione1 }}" nietrafione="{{ nietrafione1 }}">
             {% for i in wielkosc_planszy %}
                 <tr>
                     {% if kolej == 1 %}
@@ -50,7 +51,7 @@
     {% endif %}
         
         <p class="komunikat">Gracz 2</p>
-        <table trafione_pola="{{ trafione2 }}">
+        <table class="plansze" trafione="{{ trafione2 }}" nietrafione="{{ nietrafione2 }}">
             {% for i in wielkosc_planszy %}
                 <tr>
                     {% if kolej == 2 %}

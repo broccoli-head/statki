@@ -118,13 +118,15 @@ td:hover {
 }
 
 .polePomaranczowe {
-    color: white;
-    background-color: rgb(213, 90, 14);
+    background-color: rgb(233, 140, 0);
 }
 
 .polePomaranczowe:hover {
-    color: white;
-    background-color: rgb(186, 68, 25);
+    background-color: rgb(191, 124, 24);
+}
+
+.poleCzerwone {
+    background-color: rgb(221, 90, 90);
 }
 
 .komunikat {
@@ -132,6 +134,13 @@ td:hover {
     font-weight: bold;
     margin-left: auto;
     margin-right: auto;
+}
+
+#infoKolor {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 10px;
+    margin-bottom: 0;
 }
 
 .zielonaCzcionka {

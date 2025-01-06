@@ -13,4 +13,5 @@ class Gra(models.Model):
 class Uklad(models.Model):
     gra = models.ForeignKey(Gra, on_delete=models.CASCADE, related_name="uklady", null = True)
     pola = models.CharField(max_length = 256)
-    trafione_pola = models.TextField()
+    nietrafione = models.TextField()
+    trafione = models.TextField()
