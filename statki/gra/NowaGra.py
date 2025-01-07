@@ -9,7 +9,7 @@ class NowaGra:
 
     def sprawdzanie_statkow(self, wybrane_pola):    
         
-        tablica = [[0 for _ in range(10)] for _ in range(10)]   #tablica 10x10
+        tablica = [[False for _ in range(10)] for _ in range(10)]   #tablica 10x10 wypełniona falsami
 
         for pole in wybrane_pola:
             pozycja = re.search(r"(\d)x(\d)", pole)    #regex (0-9 x 0-9)
@@ -40,7 +40,7 @@ class NowaGra:
     def znajdz_statki(self, tablica):
 
         statki = []
-        sprawdzone_pola = [[False for _ in range(10)] for _ in range(10)]   #tabela 10x10 wypełniona falsami
+        sprawdzone_pola = [[False for _ in range(10)] for _ in range(10)]
 
         def sprawdz(x, y, obecny_statek):
 
@@ -67,8 +67,9 @@ class NowaGra:
             for j in range(10):
                 if tablica[i][j] == True and not sprawdzone_pola[i][j]:
                     obecny_statek = []
-                    sprawdz(i, j, obecny_statek, )
+                    sprawdz(i, j, obecny_statek)
                     statki.append(obecny_statek)
+                    
         
         for statek in statki:
             if not self.czy_liniowy(statek):
@@ -78,10 +79,10 @@ class NowaGra:
 
 
     def czy_liniowy(self, statek):
-        #tablica_x/y to zbiór wszystkich x i y aby ustalić czy statek jest pionowy lub poziomy 
+        #tablica_x/y to zbiór wszystkich x i y aby ustalić czy statek jest liniowy
         tablica_x = [x for x, y in statek]
         tablica_y = [y for x, y in statek]
 
         #set(tablica_x/y) usuwa powtórzenia - więc jeśli wszystkie x lub y są takie same, długość setu wynosi 1.
-        #gdy długość = 1, oznacza to że statek jest poziomy/pionowy
+        #gdy długość = 1, oznacza to że statek znajduje się w jednej linii
         return len(set(tablica_x)) == 1 or len(set(tablica_y)) == 1

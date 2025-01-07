@@ -1,0 +1,17 @@
+{% extends "gra/base.html" %}
+
+{% block tytul %}Statki - Zaloguj się{% endblock %}
+
+{% block tresc %}
+<main>
+    <div id="login" class="zawartosc">
+        <h1>Logowanie</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <h3>Nie masz konta? <a href="/gra/rejestracja">Zarejestruj się!</a></h3>
+            <button type="submit">Zaloguj się</button>
+        </form>
+    </div>
+</main>
+{% endblock %}

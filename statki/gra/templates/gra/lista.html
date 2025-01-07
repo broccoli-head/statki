@@ -1,7 +1,7 @@
 {% extends "gra/base.html" %}
-{% load tz %}
+{% load static tz %}    <!-- tz - django timezone -->
 
-{% block tytul %}Statki  | Lista gier{% endblock %}
+{% block tytul %}Statki - Lista gier{% endblock %}
 
 {% block tresc %}
 <main>
@@ -17,8 +17,10 @@
             <p>Nie rozegrano żadnych gier!</p>
         {% endfor %}
         </ul>
-
-        <button onclick="location.href='/gra/nowa'" type="button">→→ NOWA GRA ←←</button>
+        <button id="nowa">→→ NOWA GRA ←←</button>
+        <br>
+        <button id="wyloguj">Wyloguj się</button>
     </div>
+    <script src="{% static 'gra/glowny_skrypt.js' %}"></script>
 </main>
 {% endblock %}
