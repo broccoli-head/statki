@@ -9,6 +9,7 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
+            <input type="checkbox" name="zapamietaj" checked>Zapamiętaj mnie</input>
             <h3>Nie masz konta? <a href="/gra/rejestracja">Zarejestruj się!</a></h3>
             <button type="submit">Zaloguj się</button>
         </form>

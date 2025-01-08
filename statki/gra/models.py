@@ -17,3 +17,4 @@ class Uklad(models.Model):
     pola = models.CharField(max_length = 256)
     nietrafione = models.TextField()
     trafione = models.TextField()
+    zatopione = models.TextField()

@@ -1,5 +1,5 @@
 from django.contrib.auth import login, logout
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect
@@ -19,6 +19,23 @@ def rejestracja(request):
         formularz = UserCreationForm()
 
     return render(request, 'gra/rejestracja.html', {'form': formularz})
+
+
+def zaloguj(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data = request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            
+            if not request.POST.get('zapamietaj'):
+                request.session.set_expiry(0)
+            else:
+                request.session.set_expiry(1209600)
+            return redirect('gra:lista')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'gra/login.html', {'form': form})
 
 
 def wyloguj(request):
