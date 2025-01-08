@@ -48,7 +48,7 @@ class NowaGra:
                 return
             
             sprawdzone_pola[x][y] = True
-            obecny_statek.append((x, y))
+            obecny_statek.append((x, y))    #zapisujemy pola statków jako krotki np. (2, 5)
 
             #sprawdzenie pól sąsiadujących po bokach
             sprawdz(x+1, y, obecny_statek)
@@ -79,7 +79,7 @@ class NowaGra:
 
 
     def czy_liniowy(self, statek):
-        #tablica_x/y to zbiór wszystkich x i y aby ustalić czy statek jest liniowy
+        #tablica_x/y to zbiór wszystkich x i y aby ustalić czy statek jest liniowy 
         tablica_x = [x for x, y in statek]
         tablica_y = [y for x, y in statek]
 

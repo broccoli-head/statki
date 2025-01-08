@@ -31,7 +31,7 @@ def zaloguj(request):
             if not request.POST.get('zapamietaj'):
                 request.session.set_expiry(0)
             else:
-                request.session.set_expiry(1209600)
+                request.session.set_expiry(31536000)    #rok w sekundach
             return redirect('gra:lista')
     else:
         form = AuthenticationForm()
@@ -43,20 +43,21 @@ def wyloguj(request):
     return redirect('gra:login')
     
 
-@login_required(login_url='/gra/login/')
+@login_required(login_url = '/gra/login/')
 def lista(request):
     gry = Gra.objects.filter(uzytkownik = request.user).order_by('-id')[:10]    #10 ostatnich gier
     return render(request, "gra/lista.html", {'gry': gry})
 
 
 
-@login_required(login_url='/gra/login/')
+@login_required(login_url = '/gra/login/')
 def nowa_gra(request):
     komunikat = None
     blad = None
     gra = None
     ostatnia_gra = Gra.objects.last()
 
+    #ilosc planszy to inaczej liczba graczy, którzy już wybrali swoje pola
     if not ostatnia_gra or ostatnia_gra.ilosc_planszy == 2:
         obecny_gracz = 1
 
@@ -124,32 +125,39 @@ def nowa_gra(request):
         return render(request, "gra/nowa.html", context)
 
 
-@login_required(login_url='/gra/login/')
+@login_required(login_url = '/gra/login/')
 def bitwa(request, gra_id):
     gra = Gra.objects.get(id = gra_id)
     if gra.ilosc_planszy == 1:
         return redirect('gra:nowa_gra')
 
     if gra.uzytkownik != request.user:
-        return HttpResponseForbidden("Nie masz dostępu do tej gry.")
+        return HttpResponseForbidden("<p>Nie masz dostępu do tej gry.</p><a href='/gra'>Aby powrócić, kliknij tutaj</a>")
     
     uklady = list(Uklad.objects.filter(gra = gra).order_by('id')[:2])
   
+    #musimy zdeklarować niestety wszystkie trafione, nietrafione i zatopione
+    #aby wyświetlić dobre kolory pól dla obu graczy jednocześnie
     trafione1 = uklady[0].trafione
     nietrafione1 = uklady[0].nietrafione
     trafione2 = uklady[1].trafione
     nietrafione2 = uklady[1].nietrafione
+    zatopione1 = uklady[0].zatopione
+    zatopione2 = uklady[1].zatopione
 
     context = {
         'wielkosc_planszy': range(10),
         'kolej': gra.kolej_gracza,
         'graID': gra.id,
         'komunikat': gra.komunikat,
-        'kolor': "zielonaCzcionka" if gra.komunikat == "Trafiony!" else "czerwonaCzcionka",
+        'kolor': "zielonaCzcionka" if "Trafiony" in gra.komunikat else "czerwonaCzcionka",
         'trafione1': trafione1,
         'trafione2': trafione2,
         'nietrafione1': nietrafione1,
-        'nietrafione2': nietrafione2
+        'nietrafione2': nietrafione2,
+        'zatopione1': zatopione1,
+        'zatopione2': zatopione2,
+        'status': gra.status
     }
 
 
@@ -158,18 +166,18 @@ def bitwa(request, gra_id):
 
     if request.method == 'POST':
         odpowiedz = request.POST.get('wybrane_pole')
-        pole = re.search(r"(\d)x(\d)", odpowiedz)    #regex (0-9 x 0-9)
+        wybrane_pole = re.search(r"(\d)x(\d)", odpowiedz)    #regex (0-9 x 0-9)
 
         if odpowiedz == "":
             gra.komunikat = "Nie wybrano żadnego pola!"
-        elif not pole:
+        elif not wybrane_pole:
             gra.komunikat = "Niepoprawny format danych!"
         else:
-            x, y = map(int, pole.groups())
+            x, y = map(int, wybrane_pole.groups())
             if not (0 <= x < 10 and 0 <= y < 10):
                 gra.komunikat = "Pole poza zakresem planszy!"
             else:
-                pole = pole.group(0)
+                wybrane_pole = wybrane_pole.group(0)
 
                 if gra.kolej_gracza == 1:
                     atakowany_uklad = uklady[1]
@@ -177,23 +185,24 @@ def bitwa(request, gra_id):
                     #jezeli nie ma pól, tworzy nową listę, a jeśli są to castuje stringa z polami do listy
                     listaTrafionych = [] if not trafione1 else ast.literal_eval(trafione1)
                     listaNietrafionych = [] if not nietrafione1 else ast.literal_eval(nietrafione1)
+                    listaZatopionych = [] if not zatopione1 else ast.literal_eval(zatopione1)
 
                 else:
                     atakowany_uklad = uklady[0]
                     uklad = uklady[1]
                     listaTrafionych = [] if not trafione2 else ast.literal_eval(trafione2) 
                     listaNietrafionych = [] if not nietrafione2 else ast.literal_eval(nietrafione2)         
+                    listaZatopionych = [] if not zatopione2 else ast.literal_eval(zatopione2)
 
 
-                if pole in listaTrafionych or pole in listaNietrafionych:
+                if wybrane_pole in listaTrafionych or wybrane_pole in listaNietrafionych or wybrane_pole in listaZatopionych:
                     gra.komunikat = "Wybrano już to pole! Wybierz inne."
                 else:
-                    if pole in atakowany_uklad.pola:
-                        gra.komunikat = "Trafiony!"
-                        listaTrafionych.append(pole)
+                    if wybrane_pole in atakowany_uklad.pola:
+                        listaTrafionych.append(wybrane_pole)
                         uklad.trafione = json.dumps(listaTrafionych)
                         
-                        tablica = [[False for _ in range(10)] for _ in range(10)]   #Tablica 10x10 wypełniona falsami
+                        tablica = [[False for _ in range(10)] for _ in range(10)]   #tablica 10x10 wypełniona falsami
                         pozycje = json.loads(atakowany_uklad.pola)
                         for pozycja in pozycje:
                             x, y = map(int, pozycja.split('x'))
@@ -201,11 +210,37 @@ def bitwa(request, gra_id):
 
                         plansza = NowaGra()
                         statki = plansza.znajdz_statki(tablica)
-                        print(statki)
+
+                        #pola statków zwracane są jako krotki np. (3, 4)
+                        #dlatego zmieniamy ich format np. 3x4
+                        for statek in statki:
+                            statek = [f"{x}x{y}" for x, y in statek]
+                            if wybrane_pole in statek:
+                                statek_atakowany = statek     #statek atakowany to tablica pól statku, który został trafiony
+                                break
+
+                        #jezeli wszystkie pola statku atakowanego znajdują się w liście trafionych, jest on zatopiony
+                        if all(pole in listaTrafionych for pole in statek_atakowany):
+                            print(listaTrafionych, statek_atakowany)
+                            gra.komunikat = "Trafiony, zatopiony!"
+
+                            for pole in statek_atakowany:
+                                if pole in listaTrafionych:
+                                    listaTrafionych.remove(pole) 
+
+                            listaZatopionych.append(statek_atakowany)
+                            uklad.trafione = json.dumps(listaTrafionych)
+                            uklad.zatopione = json.dumps(listaZatopionych)
+
+                            if (len(listaZatopionych) == 10):
+                                gra.status = gra.kolej_gracza
+
+                        else:
+                            gra.komunikat = "Trafiony!"
 
                     else:
                         gra.komunikat = "Nie trafiłeś!"
-                        listaNietrafionych.append(pole)
+                        listaNietrafionych.append(wybrane_pole)
                         uklad.nietrafione = json.dumps(listaNietrafionych)
                     
                     uklad.save()

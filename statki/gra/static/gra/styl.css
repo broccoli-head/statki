@@ -138,12 +138,12 @@ td:hover {
     cursor: pointer;
 }
 
-.poleZielone {
+.poleZielone, .zatopiony {
     background-color: rgb(3, 162, 0);
     color: white;
 }
 
-.poleZielone:hover {
+.poleZielone:hover, .zatopiony:hover {
     background-color: rgb(2, 115, 0);
 }
 
@@ -202,20 +202,46 @@ td:hover {
     color: red;
 }
 
-#strzel:hover {
-    background-color: rgba(244, 119, 47, 0.8);
-    color: rgb(92, 4, 4);
-    border: dashed 3px rgb(92, 4, 4);
-}
-
 .zablokowane:hover {
     cursor: not-allowed;
     background-color: rgba(213, 112, 112, 0.7);
 }
 
+.zatopiony {
+    position: relative;
+}
+
+.zatopiony::before, .zatopiony::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 100%;
+    background-color: rgb(255, 0, 0);
+}
+
+.zatopiony::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+  
+.zatopiony::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
 #informacja {
     background-color: rgba(255, 255, 255, 0.7);
-    margin: 0 auto; /* Wyrównanie poziome */
+    margin: 0 auto;
+}
+
+#koniec {
+    margin: 0 auto;
+    font-weight: bold;
+}
+
+#koniec p {
+    color: green;
+    font-size: 1.3em;
 }
 
 input:invalid {
@@ -226,12 +252,27 @@ input:valid {
     border-color: green;
 }
 
-form .error {
-    color: red;  /* Kolor tekstu dla komunikatów błędów */
-    font-size: 12px;
-    margin-top: 5px;  /* Odstęp między polem a komunikatem */
+#strzel {
+    color: rgb(0, 0, 0);
+    transition: 0.3s ease-in-out;
+    animation: zmianaKoloru 2s infinite alternate ease-in-out;
 }
 
-.helpText {
-    color: red;
+#strzel:hover {
+    color: white;
 }
+
+@keyframes zmianaKoloru {
+    0% {
+        background-color: rgb(255, 207, 61);
+        box-shadow: 0 0 20px rgb(255, 207, 61);
+    }
+    50% {
+        background-color: rgb(255, 131, 53);
+        box-shadow: 0 0 20px rgb(255, 131, 53);
+    }
+    100% {
+        background-color: rgb(255, 86, 70);
+        box-shadow: 0 0 20px rgb(255, 86, 70);
+    }
+  }

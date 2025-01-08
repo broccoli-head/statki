@@ -3,6 +3,7 @@ let wybranePole = "";
 document.querySelectorAll('.plansze').forEach(plansza => {
     const trafione = plansza.getAttribute('trafione');
     const nietrafione = plansza.getAttribute('nietrafione');
+    const zatopione = plansza.getAttribute('zatopione');
     
     plansza.querySelectorAll('td').forEach(pole => {
         const numer = pole.textContent;
@@ -13,6 +14,9 @@ document.querySelectorAll('.plansze').forEach(plansza => {
             pole.classList.remove('pole');
         } else if (nietrafione.search(poleID) != -1) {
             pole.classList.add('poleCzerwone');
+            pole.classList.remove('pole');
+        } else if (zatopione.search(poleID) != -1) {
+            pole.classList.add('zatopiony');
             pole.classList.remove('pole');
         }
     });

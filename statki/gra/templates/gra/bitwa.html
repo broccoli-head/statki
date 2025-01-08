@@ -5,26 +5,31 @@
 
 {% block tresc %}
 
-{% if komunikat %}
+{% if status == 0 %}
     <div id="informacja" class="zawartosc">
         <span class="komunikat {{ kolor }}">{{ komunikat }}</span>
         <span class="komunikat">Kolej gracza {{ kolej }}</span>
         <p id="infoKolor">🟥― nietrafione &nbsp;&nbsp;&nbsp; 🟩― trafione</p>
     </div>
+{% else %}
+    <div id="koniec" class="zawartosc">
+        <h1>KONIEC GRY</h1>
+        <p>WYGRAŁ GRACZ {{ status }}, GRATULACJE!</p>
+    </div>
 {% endif %}
 
 <main>
-    {% if kolej == 1 %}
+    {% if kolej == 1 and status == 0 %}
         <div id="kolej" class="zawartosc">
     {% else %}
         <div class="zawartosc">
     {% endif %}
         
         <p class="komunikat">Gracz 1</p>
-        <table class="plansze" trafione="{{ trafione1 }}" nietrafione="{{ nietrafione1 }}">
+        <table class="plansze" trafione="{{ trafione1 }}" nietrafione="{{ nietrafione1 }}" zatopione="{{ zatopione1 }}">
             {% for i in wielkosc_planszy %}
                 <tr>
-                    {% if kolej == 1 %}
+                    {% if kolej == 1 and status == 0 %}
                         {% for j in wielkosc_planszy %}
                             <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
                         {% endfor %}
@@ -36,25 +41,25 @@
                 </tr>
             {% endfor %}
         </table>
-        {% if kolej == 1 %}
+        {% if kolej == 1 and status == 0 %}
             <button id="strzel">💥 WYSTRZEL 💥</button>
-        {% else %}
+        {% elif kolej == 2 and status == 0 %}
             <button disabled="true" class="zablokowane">POCZEKAJ NA SWOJĄ KOLEJ</button>
         {% endif %}
     </div>
 
 
-    {% if kolej == 2 %}
+    {% if kolej == 2 and status == 0 %}
         <div id="kolej" class="zawartosc">
     {% else %}
         <div class="zawartosc">
     {% endif %}
         
         <p class="komunikat">Gracz 2</p>
-        <table class="plansze" trafione="{{ trafione2 }}" nietrafione="{{ nietrafione2 }}">
+        <table class="plansze" trafione="{{ trafione2 }}" nietrafione="{{ nietrafione2 }}" zatopione="{{ zatopione2 }}">
             {% for i in wielkosc_planszy %}
                 <tr>
-                    {% if kolej == 2 %}
+                    {% if kolej == 2 and status == 0 %}
                         {% for j in wielkosc_planszy %}
                             <td id="{{ i }}x{{ j }}" class="pole">{{ i }}{{ j }}</td>
                         {% endfor %}
@@ -66,9 +71,9 @@
                 </tr>
             {% endfor %}
         </table>
-        {% if kolej == 2 %}
+        {% if kolej == 2 and status == 0 %}
             <button id="strzel">💥 WYSTRZEL 💥</button>
-        {% else %}
+        {% elif kolej == 1 and status == 0 %}
             <button disabled="true" class="zablokowane">POCZEKAJ NA SWOJĄ KOLEJ</button>
         {% endif %}
     </div>

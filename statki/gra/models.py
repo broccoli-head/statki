@@ -8,6 +8,8 @@ class Gra(models.Model):
     data_rozpoczecia = models.DateTimeField(default = now)
     kolej_gracza = models.IntegerField(default = 0)
     komunikat = models.CharField(max_length = 128)
+    #status 0 → gra trwa | status 1 → gracz 1 wygrał | status 2 → gracz 2 wygrał
+    status = models.SmallIntegerField(default = 0)
 
     def __str__(self):
         return f"Gra {self.id}"
