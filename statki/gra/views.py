@@ -71,7 +71,6 @@ def nowa_gra(request):
     
 
     if request.method == 'POST':
-
         odpowiedz = request.POST.get('wybrane_pola')
 
         if (odpowiedz == "RESET"):
@@ -242,13 +241,11 @@ def bitwa(request, gra_id):
                         gra.komunikat = "Nie trafiłeś!"
                         listaNietrafionych.append(wybrane_pole)
                         uklad.nietrafione = json.dumps(listaNietrafionych)
+                        gra.kolej_gracza = 1 if gra.kolej_gracza == 2 else 2
                     
-                    uklad.save()
-                    gra.kolej_gracza = 1 if gra.kolej_gracza == 2 else 2
-                    
-           
+        uklad.save()  
         gra.save()
         return redirect('gra:bitwa', gra_id=gra.id)
         
     else:
-        return render (request, "gra/bitwa.html", context)   
+        return render (request, "gra/bitwa.html", context)

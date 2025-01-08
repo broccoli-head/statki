@@ -73,7 +73,7 @@ class NowaGra:
         
         for statek in statki:
             if not self.czy_liniowy(statek):
-                raise ValueError("Statki nie mogą się dotykać (nawet rogami)")   #rzuca wyjątek jako komunikat
+                raise ValueError("Twoje statki się dotykają lub skręcają!")   #rzuca wyjątek jako komunikat
         
         return statki
 
