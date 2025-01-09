@@ -6,7 +6,6 @@ Prosta gra w okręty oparta na frameworku Django.
 ![Logowanie](gify/logowanie.gif)
 
 2. Dla każdego konta jest osobna lista gier!
-![Lista](gify/lista.gif)
 
 3. Tworzenie nowej gry polega na wybraniu pól przez obu graczy. Gra odbywa się **na pojedynczym komputerze**!!!
 
